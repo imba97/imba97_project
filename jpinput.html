@@ -1,0 +1,409 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+body,div,p,ul,li{margin:0;padding:0}
+#imba97_span
+{
+}
+</style>
+</head>
+<body>
+  <input id="a1" type="text" />
+  <input id="a2" type="text" />
+          <!-- <div id="imba97_keyboard_window">
+          <div id="imba97_keyboard" imba97="0">
+          <div class="switch_div"></div>
+          <ul class="imba97_btn_window">
+
+            <li><a class="imba97_btn" id="switch" title="切换" href="javascript:void(0);"></a></li>
+            <li><a class="imba97_btn" id="switch" title="切换" href="javascript:void(0);"></a></li>
+          </ul>
+          <div class="imba97_keyboard_1">
+          <p><span>あ</span><span>い</span><span>う</span><span>え</span><span>お</span></p>
+          <p><span>か</span><span>き</span><span>く</span><span>け</span><span>こ</span></p>
+          <p><span>さ</span><span>し</span><span>す</span><span>せ</span><span>そ</span></p>
+          <p><span>た</span><span>ち</span><span>つ</span><span>て</span><span>と</span></p>
+          <p><span>な</span><span>に</span><span>ぬ</span><span>ね</span><span>の</span></p>
+          </div>
+          <div class="imba97_keyboard_2">
+          <p><span>は</span><span>ひ</span><span>ふ</span><span>へ</span><span>ほ</span></p>
+          <p><span>ま</span><span>み</span><span>む</span><span>め</span><span>も</span></p>
+          <p><span>や</span><span class="transparent">い</span><span>ゆ</span><span class="transparent">え</span><span>よ</span></p>
+          <p><span>ら</span><span>り</span><span>る</span><span>れ</span><span>ろ</span></p>
+          <p><span>わ</span><span class="transparent">い</span><span class="transparent">う</span><span class="transparent">え</span><span>を</span></p>
+          </div>
+          <p class="imba97_keyboard_3"><span>ん</span></p>
+          <p class="imba97_keyboard_4"><span>ぁ</span><span>ぃ</span><span>ぅ</span><span>ぇ</span><span>ぉ</span></p>
+          <p class="imba97_keyboard_5"><span>ゃ</span><span>ゅ</span><span>ょ</span>
+          </div><div style="clear:both"></div>
+          </div> -->
+  <div style="height:2000px"></div>
+</body>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script type="text/javascript">
+if(imba97_K==undefined)//防止重复开启
+{
+  var imba97_VERSION=1.1;           //版本
+  var imba97_F;                     //提交输入的元素
+  var imba97_W;                     //人型自走输入法大窗口，定位时用的
+  var imba97_T=1;                   //1：平假名，2：片假名
+  var imba97_S=[0,0,0];             //按键存储
+  var imba97_N=0;                   //按键存储的键
+  var imba97_TEXT;                  //假名暂存元素
+  var imba97_UN;                    //英文字符暂存元素（有下环线的那个）
+  var imba97_BTN;                   //按钮框
+  var imba97_UT='';                 //英文字符暂存变量
+  var imba97_ON=true;               //开关变量，true：开，false：关
+  var imba97_K=new Array();         //人型自走输入法核心日语数据构造（啪 说人话）存日语的数组
+  //关于imba97_K构造 imba97_K[键位1]（[键位2][键位3]）[是否输出，输出字符]或imba97_K[键位1][是否输出，平假名，片假名]
+
+  //构造首字符
+  imba97_K[75]=[1,'k'];imba97_K[83]=[1,'s'];imba97_K[84]=[1,'t'];imba97_K[78]=[1,'n'];imba97_K[72]=[1,'h'];
+  imba97_K[77]=[1,'m'];imba97_K[89]=[1,'y'];imba97_K[82]=[1,'r'];imba97_K[87]=[1,'w'];imba97_K[70]=[1,'f'];
+  imba97_K[74]=[1,'j'];imba97_K[76]=[1,'l'];imba97_K[67]=[1,'c'];imba97_K[81]=[1,'q'];imba97_K[84][89]=[1,'s'];
+  imba97_K[67][72]=[1,'h'];imba97_K[83][72]=[1,'h'];imba97_K[81][87]=[1,'w'];imba97_K[75][87]=[1,'w'];
+
+  //五十音
+  imba97_K[65]=[0,'あ','ア'];imba97_K[73]=[0,'い','イ'];imba97_K[85]=[0,'う','ウ'];imba97_K[69]=[0,'え','エ'];imba97_K[79]=[0,'お','オ'];
+  imba97_K[75][65]=[0,'か','カ'];imba97_K[75][73]=[0,'き','キ'];
+  imba97_K[75][85]=[0,'く','ク'];imba97_K[75][69]=[0,'け','ケ'];imba97_K[75][79]=[0,'こ','コ'];
+  imba97_K[83][65]=[0,'さ','サ'];imba97_K[83][73]=[0,'し','シ'];
+  imba97_K[83][85]=[0,'す','ス'];imba97_K[83][69]=[0,'せ','セ'];imba97_K[83][79]=[0,'そ','ソ'];
+  imba97_K[84][65]=[0,'た','タ'];imba97_K[84][73]=[0,'ち','チ'];
+  imba97_K[84][85]=[0,'つ','ツ'];imba97_K[84][69]=[0,'て','テ'];imba97_K[84][79]=[0,'と','ト'];
+  imba97_K[78][65]=[0,'な','ナ'];imba97_K[78][73]=[0,'に','ニ'];
+  imba97_K[78][85]=[0,'ぬ','ヌ'];imba97_K[78][69]=[0,'ね','ネ'];imba97_K[78][79]=[0,'の','ノ'];
+  imba97_K[72][65]=[0,'は','ハ'];imba97_K[72][73]=[0,'ひ','ヒ'];
+  imba97_K[72][85]=[0,'ふ','フ'];imba97_K[72][69]=[0,'へ','ヘ'];imba97_K[72][79]=[0,'ほ','ホ'];
+  imba97_K[77][65]=[0,'ま','マ'];imba97_K[77][73]=[0,'み','ミ'];
+  imba97_K[77][85]=[0,'む','ム'];imba97_K[77][69]=[0,'め','メ'];imba97_K[77][79]=[0,'も','モ'];
+  imba97_K[89][65]=[0,'や','ヤ'];imba97_K[89][85]=[0,'ゆ','ユ'];imba97_K[89][79]=[0,'よ','ヨ'];
+  imba97_K[82][65]=[0,'ら','ラ'];imba97_K[82][73]=[0,'り','リ'];
+  imba97_K[82][85]=[0,'る','ル'];imba97_K[82][69]=[0,'れ','レ'];imba97_K[82][79]=[0,'ろ','ロ'];
+  imba97_K[87][65]=[0,'わ','ワ'];imba97_K[87][79]=[0,'を','ヲ'];
+  imba97_K[78][78]=[0,'ん','ン'];
+
+  //浊音
+  imba97_K[71]=[1,'g'];imba97_K[90]=[1,'z'];imba97_K[68]=[1,'d'];imba97_K[66]=[1,'b'];
+  imba97_K[71][65]=[0,'が','ガ'];imba97_K[71][73]=[0,'ぎ','ギ'];
+  imba97_K[71][85]=[0,'ぐ','グ'];imba97_K[71][69]=[0,'げ','ゲ'];imba97_K[71][79]=[0,'ご','ゴ'];
+  imba97_K[90][65]=[0,'ざ','ザ'];imba97_K[90][73]=[0,'じ','ジ'];
+  imba97_K[90][85]=[0,'ず','ズ'];imba97_K[90][69]=[0,'ぜ','ゼ'];imba97_K[90][79]=[0,'ぞ','ゾ'];
+  imba97_K[68][65]=[0,'だ','ダ'];imba97_K[68][73]=[0,'ぢ','ヂ'];
+  imba97_K[68][85]=[0,'づ','ヂ'];imba97_K[68][69]=[0,'で','デ'];imba97_K[68][79]=[0,'ど','ド'];
+  imba97_K[66][65]=[0,'ば','バ'];imba97_K[66][73]=[0,'び','ビ'];
+  imba97_K[66][85]=[0,'ぶ','ブ'];imba97_K[66][69]=[0,'べ','ベ'];imba97_K[66][79]=[0,'ぼ','ボ'];
+
+  //半浊音
+  imba97_K[80]=[1,'p'];
+  imba97_K[80][65]=[0,'ぱ','パ'];imba97_K[80][73]=[0,'ぴ','ピ'];
+  imba97_K[80][85]=[0,'ぷ','プ'];imba97_K[80][69]=[0,'ぺ','ペ'];imba97_K[80][79]=[0,'ぽ','ポ'];
+
+  //构造拗音需要的第二字符
+  imba97_K[75][89]=[1,'y'];
+  imba97_K[71][89]=[1,'y'];
+  imba97_K[83][89]=[1,'y'];
+  imba97_K[74][89]=[1,'y'];
+  imba97_K[67][89]=[1,'y'];
+  imba97_K[68][89]=[1,'y'];
+  imba97_K[78][89]=[1,'y'];
+  imba97_K[72][89]=[1,'y'];
+  imba97_K[66][89]=[1,'y'];
+  imba97_K[80][89]=[1,'y'];
+  imba97_K[77][89]=[1,'y'];
+  imba97_K[82][89]=[1,'y'];
+  imba97_K[70][89]=[1,'y'];
+  //拗音
+  imba97_K[75][89][65]=[0,'きゃ','キャ'];imba97_K[75][89][85]=[0,'きゅ','キュ'];imba97_K[75][89][79]=[0,'きょ','キョ'];
+  imba97_K[71][89][65]=[0,'ぎゃ','ギャ'];imba97_K[71][89][85]=[0,'ぎゅ','ギュ'];imba97_K[71][89][79]=[0,'ぎょ','ギョ'];
+  imba97_K[83][89][65]=[0,'しゃ','シャ'];imba97_K[83][89][85]=[0,'しゅ','シュ'];imba97_K[83][89][79]=[0,'しょ','ショ'];
+  imba97_K[74][89][65]=[0,'じゃ','ジャ'];imba97_K[74][89][85]=[0,'じゅ','ジュ'];imba97_K[74][89][79]=[0,'じょ','ジョ'];
+  imba97_K[67][89][65]=[0,'ちゃ','チャ'];imba97_K[67][89][85]=[0,'ちゅ','チュ'];imba97_K[67][89][79]=[0,'ちょ','チョ'];
+  imba97_K[68][89][65]=[0,'ぢゃ','ヂャ'];imba97_K[68][89][85]=[0,'ぢゅ','ヂュ'];imba97_K[68][89][79]=[0,'ぢょ','ヂョ'];
+  imba97_K[78][89][65]=[0,'にゃ','ニャ'];imba97_K[78][89][85]=[0,'にゅ','ニュ'];imba97_K[78][89][79]=[0,'にょ','ニョ'];
+  imba97_K[72][89][65]=[0,'ひゃ','ヒャ'];imba97_K[72][89][85]=[0,'ひゅ','ヒュ'];imba97_K[72][89][79]=[0,'ひょ','ヒョ'];
+  imba97_K[66][89][65]=[0,'びゃ','ビャ'];imba97_K[66][89][85]=[0,'びゅ','ビュ'];imba97_K[66][89][79]=[0,'びょ','ビョ'];
+  imba97_K[80][89][65]=[0,'ぴゃ','ピャ'];imba97_K[80][89][85]=[0,'ぴゅ','ピュ'];imba97_K[80][89][79]=[0,'ぴょ','ピョ'];
+  imba97_K[77][89][65]=[0,'みゃ','ミャ'];imba97_K[77][89][85]=[0,'みゅ','ミュ'];imba97_K[77][89][79]=[0,'みょ','ミョ'];
+  imba97_K[82][89][65]=[0,'りゃ','リャ'];imba97_K[82][89][85]=[0,'りゅ','リュ'];imba97_K[82][89][79]=[0,'りょ','リョ'];
+
+  //多种入方式的假名
+  imba97_K[70][85]=[0,'ふ','フ'];
+  imba97_K[74][73]=[0,'じ','ジ'];
+  imba97_K[84][83]=[1,'s'];imba97_K[84][83][85]=[0,'つ','ツ'];
+  imba97_K[67][72][73]=[0,'ち','チ'];imba97_K[83][72][73]=[0,'し','シ'];
+
+  //外来语（不全 因为懒）
+  imba97_K[86]=[1,'v'];imba97_K[86][65]=[0,'ゔぁ','ヴァ'];imba97_K[86][73]=[0,'ゔぃ','ヴィ'];
+  imba97_K[86][85]=[0,'ゔ','ヴ'];imba97_K[86][69]=[0,'ゔぇ','ヴェ'];imba97_K[86][79]=[0,'ゔぉ','ヴォ'];
+  imba97_K[70][65]=[0,'ふぁ','ファ'];imba97_K[70][73]=[0,'ふぃ','フィ'];
+  imba97_K[70][89][85]=[0,'ふゅ','フュ'];imba97_K[70][69]=[0,'ふぇ','フェ'];imba97_K[70][79]=[0,'ふぉ','フォ'];
+  imba97_K[84][83][69]=[0,'つぇ','ツェ'];imba97_K[67][72][69]=[0,'ちぇ','チェ'];imba97_K[83][72][69]=[0,'しぇ','シェ'];
+  imba97_K[74][69]=[0,'じぇ','ジェ'];imba97_K[89][69]=[0,'いぇ','イェ'];
+  imba97_K[81][87][65]=[0,'くぁ','クァ'];imba97_K[75][87][65]=[0,'くぁ','クァ'];
+  imba97_K[81][87][79]=[0,'くぉ','クォ'];imba97_K[75][87][79]=[0,'くぉ','クォ'];
+  imba97_K[87][73]=[0,'うぃ','ウィ'];imba97_K[87][69]=[0,'うぇ','ウェ'];
+
+  //小的ぁぃぅぇぉ（不知学名叫啥）
+  imba97_K[76][65]=[0,'ぁ','ァ'];imba97_K[76][73]=[0,'ぃ','ィ'];
+  imba97_K[76][85]=[0,'ぅ','ゥ'];imba97_K[76][69]=[0,'ぇ','ェ'];imba97_K[76][79]=[0,'ぉ','ォ'];
+  //长音
+  imba97_K[189]=[0,'ー','ー'];
+
+  //当text或textarea获取焦点
+  $(':text,textarea').focus(function(){
+    if(!imba97_ON) return;//如果程序为关闭状态 结束运行
+    imba97_F=$(this);//获取获取焦点的元素
+    imba97_F.blur();//失去焦点
+    var position=imba97_F.offset();//获取元素位置
+    if($('#imba97_keyboard_window').length<=0)//程序窗口如果没创建
+    {
+      //创建程序窗口、创建程序的HTML
+      $('body').append('<div style=\'position:absolute;top:0;z-index:999999\' id=\'imba97_keyboard_window\'><ul style=\'position:absolute;right:30px;top:30px;list-style:none\' id=\'imba97_btn\'><li id=\'imba97_close\'><span>关闭</span></li><li id=\'imba97_cu\'><span>平假</span></li></ul><span id=\'imba97_posi\' style=\'position:absolute;width:500px;\'><span style=\'position:absolute;padding:3px;min-width:50px\' id=\'imba97_span\'><div class=\'imba97_bg\'></div><span style=\'color:#FFF\' id=\'imba97_text\'></span><span style=\'text-decoration:underline;color:#FFF\' id=\'imba97_underline\'></span><span id=\'imba97_cursor\' style=\'color:#FFF\'>|</span></span><ol id=\'imba97_kj\' style=\'position:absolute;top:35px;left:0;width:auto;height:30px;line-height:30px;color:#FFF;\'><li>1</li><li>2</li><li>3</li><div class=\'imba97_bg\'></div></ol></span></div>');
+      imba97_W=$('#imba97_keyboard_window');//获取程序窗口
+      imba97_TEXT=imba97_W.find('#imba97_text');//设置输入暂存元素变量
+      imba97_UN=imba97_W.find('#imba97_underline');//设置英文字符暂存元素变量
+      imba97_BTN=imba97_W.find('#imba97_btn');//设置按钮框变量
+      //设置css
+      imba97_W.css({'margin':0,'padding':0});
+      imba97_W.find('#imba97_btn,#imba97_btn li,#imba97_kj').css({'margin':0,'padding':0});
+      imba97_W.find('#imba97_kj').css({});
+      imba97_W.find('#imba97_kj li').css({'float':'left','margin':'0 20px'});
+      imba97_W.find('*').css({'text-align':'left'});
+      //创建事件 这里貌似没用 暂留（这里就是让我恶心的那个BUG
+      imba97_F.bind('blur',function(){
+        if(imba97_W.length>0) return;
+        $(this).unbind('blur');
+        imba97_F=null;
+      });
+      //双击关闭与按钮关闭
+      imba97_W.find('#imba97_span').bind('dblclick',function(){
+        imba97_close();
+      });
+      imba97_BTN.find('#imba97_close').bind('click',function(){
+        imba97_close();
+      });
+      //平假名片假名切换
+      imba97_BTN.find('#imba97_cu').bind('click',function(){
+        imba97_cu();
+      });
+      //设置css
+      imba97_BTN.find('li').css({
+        'position':'relative','margin-top':5,'width':30,'height':30,'cursor':'pointer',
+        'font-size':12,'color':'#FFF','line-height':'30px','text-align':'center','border-radius':7
+      }).append('<div class=\'imba97_bg\'></div>');
+      imba97_W.find('.imba97_bg').css({
+        'position':'absolute','top':0,'left':0,'width':'100%','height':'100%','background-color':'#000',
+        'opacity':'0.75','border-radius':'5px','z-index':'-9999'
+      });
+      //光标的闪动
+      imba97_fade(imba97_W.find('#imba97_cursor'));
+    }
+    var e_top=position.top+imba97_F.outerHeight()+10;//构造top：输入框距离网页顶端距离+输入框高度+10
+    var e_left=position.left;//构造left：输入框距离网页左边距离
+    //判断是否过于偏上或偏左，防止按钮与人型自走输入法输入框重叠
+    var f_top=e_top>30?e_top:30;;
+    var f_left=e_left>50?e_left:50;
+    var btn_top=f_top-5>0?(f_top-5):0;
+    var btn_left=f_left-40>0?(f_left-40):0;
+    imba97_W.find('#imba97_posi').css({'top':f_top,'left':f_left}).show();//定位定位框
+    imba97_BTN.css({'top':btn_top,'left':btn_left});//定位按钮框
+  });
+  //键盘事件
+  $(document).keydown(function(e){
+    if(!imba97_ON) return;//如果程序为关闭状态 结束运行
+    if(imba97_F==null||imba97_F==undefined) return;//如果不存在输入框则结束运行
+    imba97_F.blur();//失去焦点
+    var key=e.which;//获取按键的值
+    var s=imba97_TEXT.text();//获取假名框已有的字符
+    var us=imba97_UN.text();//获取英文字符框已有的字符
+    var fs=imba97_F.val();//获取输入框已有的字符
+    if(key==16){imba97_cu();return;}//如果是左Shift则运行切换平假名片假名函数
+    //如果是退格则退格（又废话），如果英文字符框有内容则先删除英文字符框的内容并让按键储存的键-1s喵喵喵？？？如果没有了则删除假名框内容
+    if(key==8&&(s.length!=0||us.length!=0)){e.preventDefault();if(imba97_UN.text()!=''){var n=us.substring(0,us.length-1);imba97_UN.text(n);imba97_UT=n;imba97_S[imba97_N];imba97_N--}else{var n=s.substring(0,s.length-1);imba97_TEXT.text(n);};return;}
+    //如果是回车则把人型自走输入法输入框的内容放进网页输入框，并运行清除函数
+    if(key==13){e.preventDefault();imba97_F.val(fs+s);$('#imba97_text').text('');imba97_clear();return;}
+    //如果是a到z或者减号按键
+    if(key>64&&key<91||key==189)
+    {
+      e.preventDefault();//取消默认键盘事件
+      if(imba97_K[key]==undefined) return;//如果按键存储没有相应按键则结束运行
+      if(imba97_K[key][0])//判断是否直接输出 1：有直接输出的字符，0：有假名可以输出
+      {
+        if(imba97_UN.text()!='')//如果英文字符框有字符（第一次判断一定为假，所以你想看运行顺序请直接跳到下面的else语句）
+        {
+          //开启分支
+          switch(imba97_N)
+          {
+            case 1:
+              //如果按键相等并且按键不等于n和长音，则输出促音
+              if(key==imba97_S[0]&&key!=78&&key!=189)
+              {
+                //判断平假名片假名
+                var tsu=imba97_T==1?'っ':'ッ';
+                imba97_TEXT.text(s+tsu);
+                return;
+              }
+              //如果输入的第二个字符不等于未定义
+              if(imba97_K[imba97_S[0]][key]!=undefined)
+              {
+                //将第二个的值存到按键存储
+                imba97_S[1]=key;
+                //如果输入第二个字符后有直接输出
+                if(imba97_K[imba97_S[0]][key][0])
+                {
+                  //输出英文字符
+                  imba97_UT+=imba97_K[imba97_S[0]][key][1];
+                  imba97_UN.text(imba97_UT);
+                  imba97_N++;
+                  return;
+                }
+                else
+                {
+                  //如果没有直接输出，则输出相应假名
+                  imba97_TEXT.text(s+imba97_K[imba97_S[0]][key][imba97_T]);
+                  imba97_clear();
+                  return;
+                }
+              }
+              else
+              {
+                return;
+              }
+            break;
+            case 2:
+              //输入第三个字符后如果imba97_K相应的值不等于未定义
+              if(imba97_K[imba97_S[0]][imba97_S[1]]==undefined||imba97_K[imba97_S[0]][imba97_S[1]][key]!=undefined)
+              {
+                //这里并没啥用，因为目前所有最多都是输出三个字符就能输出假名，留作以后说不定会有4字符，其实以后打算用递归
+                if(imba97_K[imba97_S[0]][imba97_S[1]][key][0])
+                {
+                  //没卵用
+                  imba97_N++;
+                  return;
+                }
+                else
+                {
+                  //输出到人型自走输入法文本框
+                  imba97_TEXT.text(s+imba97_K[imba97_S[0]][imba97_S[1]][key][imba97_T]);
+                  imba97_clear();
+                  return;
+                }
+              }
+              else
+              {
+                return;
+              }
+            break;
+          }
+        }
+        else
+        {
+          //如果英文字符框没字符
+          if(imba97_K[key]!=undefined) imba97_S[imba97_N]=key;else return;//如果按键不等于未定义 则存储按键值 否则结束运行（等等 这儿是干嘛用的。。。）
+          imba97_UT+=imba97_K[key][1];//输出英文字符
+          imba97_UN.text(imba97_UT);
+          imba97_N++;
+          return;
+        }
+      }
+      else
+      {
+        //如果没直接输出的字符了，就是说可以输出假名
+        switch(imba97_N)
+        {
+          //如果目前正在输入第二个字符
+          case 1:
+            if(imba97_K[imba97_S[0]][key]==undefined) return;
+            imba97_TEXT.text(s+imba97_K[imba97_S[0]][key][imba97_T]);
+            imba97_clear();
+            return;
+          break;
+          //如果目前正在输入第三个字符
+          case 2:
+            if(imba97_K[imba97_S[0]][imba97_S[1]][key]==undefined) return;
+            imba97_TEXT.text(s+imba97_K[imba97_S[0]][imba97_S[1]][key][imba97_T]);
+            imba97_clear();
+            return;
+          break;
+        }
+      }
+      if(imba97_K[key][imba97_T]!=undefined) $('#imba97_text').text(s+imba97_K[key][imba97_T]);//这里是五个元音、长音的一次♂性按键输入字符
+    }
+  });
+  //更新提醒
+  $.post('http://data.imba97.cn/Index/jpInputUpdate',{'version':imba97_VERSION},function(imba97_json){
+    // alert(imba97_json.test);return;
+    if(imba97_json.version!==null&&imba97_json.version!==undefined)//返回值不等于空或未定义
+    {
+      if(imba97_json.version!==imba97_VERSION)//如果与现有版本不符
+      {
+        //提示更新
+        var info='发现新版本 v'+imba97_json.version+' \n\n'+imba97_json.info;
+        if(window.confirm(info))
+        {
+          window.location.href='http://g.imba97.cn/jpinput/';
+        }
+      }
+    }
+  });
+
+  //光标闪动函数
+  function imba97_fade(doc)
+  {
+    doc.animate({'opacity':0},500,function(){
+      $(this).animate({'opacity':1},500,function(){
+        imba97_fade($(this));
+      });
+    });
+  }
+  //开关函数
+  function imba97_close()
+  {
+    if(imba97_ON)
+    {
+      $('#imba97_span').fadeOut();
+      imba97_BTN.find('#imba97_close span').html('开启');
+      imba97_ON=false;
+    }
+    else
+    {
+      $('#imba97_span').fadeIn();
+      imba97_BTN.find('#imba97_close span').html('关闭');
+      imba97_ON=true;
+    }
+    imba97_clear(true);
+  }
+  //平假名片假名切换函数
+  function imba97_cu()
+  {
+    if(imba97_T==1)
+    {
+      imba97_BTN.find('#imba97_cu span').html('片假');
+      imba97_T=2;
+    }
+    else
+    {
+      imba97_BTN.find('#imba97_cu span').html('平假');
+      imba97_T=1;
+    }
+  }
+  //清除假名框、英文字符框、按键存储
+  function imba97_clear(k)
+  {
+    if(k)
+    {
+      imba97_TEXT.text('');
+    }
+    imba97_N=imba97_S[0]=imba97_S[1]=imba97_S[2]=0;
+    imba97_UT='';
+    imba97_UN.text('');
+  }
+}
+
+
+</script>
+</html>
