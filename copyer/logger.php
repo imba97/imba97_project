@@ -2,7 +2,7 @@
 class Logger {
   private $_type = 'info';
   private $_path = './';
-  private $_filename = 'log.txt';
+  private $_filename = 'run.log';
 
   function __construct() {
     date_default_timezone_set('PRC');
