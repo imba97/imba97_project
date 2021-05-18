@@ -1,6 +1,6 @@
 # 微信机器人
 
-使用 Wechaty 微信开发库做的，[起因](https://imba97.cn/archives/740/)
+使用 Wechaty 微信开发库做的，[起因](https://imba97.cn/archives/741/)
 
 建议把本项目只作为代码参考，不建议直接用，直接用倒是也可以
 
