@@ -14,21 +14,31 @@
 
 发送`梗百科 关键词`可以查询梗的意思
 
-## 基金
-
-发送`基金 基金代码`可以查询半年内单位净值图
+![](https://imba97.cn/uploads/2021/05/wechaty-6.jpg)
 
 ## 以图搜番
 
 发送`以图搜番`会提示请上传图片，上传图后即可以图搜番
 
-使用接口 (trace.moe)[https://trace.moe]，日漫为主
+使用接口 [trace.moe](https://trace.moe)，日漫为主
+
+![](https://imba97.cn/uploads/2021/05/wechaty-7.jpg)
 
 ## 黑白照片上色
 
 发送`上色`会提示请上传图片，上传图片后即可返回上色后的照片
 
 使用接口 [百度图像增强](https://console.bce.baidu.com/ai/#/ai/imageprocess/overview/index)
+
+![](https://imba97.cn/uploads/2021/05/wechaty-8.jpg)
+
+## 基金
+
+发送`基金 基金代码`可以查询半年内单位净值图
+
+![](https://imba97.cn/uploads/2021/05/wechaty-9.jpg)
+
+![](https://imba97.cn/uploads/2021/05/wechaty-10.jpg)
 
 ### 服务端
 
