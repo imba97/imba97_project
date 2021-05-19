@@ -6,3 +6,4 @@
 - [复制文件儿](https://github.com/imba97/imba97_project/tree/master/copyer)
 - [获取QQ头像](https://github.com/imba97/imba97_project/tree/master/get_qq_profile)
 - [微信机器人](https://github.com/imba97/imba97_project/tree/master/wechat_bot)
+- [B站器人](https://github.com/imba97/imba97_project/tree/master/bili_bot)

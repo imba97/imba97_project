@@ -1,0 +1,22 @@
+{
+  "name": "bilibili",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "type": "module",
+  "devDependencies": {
+    "axios": "^0.21.1",
+    "crypto": "^1.0.1",
+    "fluent-ffmpeg": "^2.1.2",
+    "form-data": "^4.0.0",
+    "image-size": "^1.0.0",
+    "lodash": "^4.17.21",
+    "picgo": "^1.4.21",
+    "sqlite3": "^5.0.2"
+  }
+}
