@@ -3,39 +3,13 @@
  */
 
 import sqlite3 from 'sqlite3'
-// import axios from '_axios@0.21.1@axios'
 import axios from 'axios'
 import { sendMsg } from './index.js'
-import sizeOf from 'image-size'
-import fs, { mkdir, mkdirSync } from 'fs'
+import fs, { mkdirSync } from 'fs'
 import FormData from 'form-data'
-import { sender_uid, cookie, csrf, commonHeaders, tempDir } from './common.js'
+import { tempDir, getCommonHeaders } from './config.js'
 import ffmpeg from 'fluent-ffmpeg'
 import crypto from 'crypto'
-
-initDB(async function(db) {
-  // db.get(`SELECT * FROM sqlite_master`, function(err, row) {
-  //   console.log(row)
-  // })
-
-  // db.all(`SELECT * FROM order_info`, function(err, row) {
-  //   console.log(row)
-  // })
-
-  // console.log(await getUserIsSend('test1', '以图搜番'))
-  // await setUserIsSend('test', 1)
-
-  // 发送图片（需要先获取图片长宽）
-  // const url = 'https://imba97.cn/uploads/2021/04/bazhong-1.jpg'
-  // const data = await getFileData(url)
-  // const size = sizeOf(data)
-  // sendMsg(2198461, JSON.stringify({
-  //   url: url,
-  //   width: size.width,
-  //   height: size.height
-  // }), 2);
-  
-})
 
 // 处理图片逻辑
 export async function imageHandle(username, url) {
@@ -145,7 +119,7 @@ export async function uploadLocalImageToBilibili(localPath) {
 
   return axios.post(url, uploadImageFormData, {
     headers: {
-      ...commonHeaders,
+      ...getCommonHeaders(),
       ...uploadImageFormData.getHeaders()
     }
   })

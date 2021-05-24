@@ -1,11 +1,35 @@
 import axios from 'axios'
-import FormData from 'form-data'
+import { tempDir, getCommonHeaders } from './config.js'
 import { imageHandle, getUserIsSend, setUserIsSend, getCodeMessage } from './image.js'
-import fs from 'fs'
-import { sender_uid, cookie, csrf, commonHeaders } from './common.js'
 import _ from 'lodash'
 
-setInterval(function() {
+import { getCookie } from './cookie.js'
+import { doLogin, checkIsLogout } from './login.js'
+
+let cookie = ''
+let sender_uid = ''
+let csrf = ''
+let commonHeaders
+/**
+ * 是否正在登陆
+ */
+let isLogged = false
+
+// 登陆逻辑
+if(cookie === '') {
+
+  cookie = getCookie()
+  if(cookie === '') {
+    cookie = await doLogin()
+  }
+
+  sender_uid = parseInt(/DedeUserID=(\d+)/.exec(cookie)[1])
+  csrf = /bili_jct=([a-z0-9]+)/.exec(cookie)[1]
+  commonHeaders = getCommonHeaders()
+
+}
+
+const mainTimer = setInterval(async function() {
 
   // 获取消息数
   axios.get('http://api.vc.bilibili.com/session_svr/v1/session_svr/single_unread', {
@@ -24,13 +48,13 @@ setInterval(function() {
 
       _.forEach(res.data.data.session_list, item => {
 
-        if(item.last_msg.sender_uid === 591838467) return;
+        if(item.last_msg.sender_uid === sender_uid) return;
 
         const type = item.last_msg.msg_type
         const getMessage = JSON.parse(item.last_msg.content)
 
         const msg = type === 1 ? getMessage.content : getMessage.url
-        console.log('接收', msg)
+        console.log('[接收]', msg)
 
         const codeMessage = getCodeMessage(msg)
         if(codeMessage !== false) {
@@ -120,7 +144,17 @@ export function sendMsg(uid, content, type = 1) {
   formData.append('csrf', csrf);
 
   axios.post(sendMessageUrl, formData, config).then((sendMessageRes) => {
-    console.log('回复', content);
+    console.log('[回复]', content);
   });
 }
 
+const checkIsLogoutTimer = setInterval(function() {
+  checkIsLogout()
+  .then(isLogout => {
+    if(isLogout) {
+      clearInterval(mainTimer)
+      clearInterval(checkIsLogoutTimer)
+      console.error('账号登陆状态失效')
+    }
+  })
+}, 86400000)

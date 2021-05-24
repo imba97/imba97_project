@@ -22,11 +22,12 @@
 # 文件
 
 ```
-📦bili_bot
- ┣ 📜common.js 公共 一些配置
- ┣ 📜image.js 图片处理
- ┣ 📜index.js 入口文件
- ┗ 📜package.json
+bili_bot
+ ┣ config.js 配置
+ ┣ cookie.js cookie处理
+ ┣ image.js 图片处理
+ ┣ index.js 入口文件
+ ┗ login.js 登录处理
 ```
 
 # 使用方法
