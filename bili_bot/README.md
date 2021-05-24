@@ -38,7 +38,7 @@ bili_bot
 npm i
 ```
 
-2. 配置 `common.js` 中的设置
+2. 下载安装 `ffmpeg` 并配置PATH（可以在命令行使用就OK了）
 
 3. 启动服务
 
