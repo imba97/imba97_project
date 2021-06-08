@@ -1,0 +1,16 @@
+{
+  "name": "sonystyle-auto-sign-in",
+  "version": "1.0.0",
+  "description": "索尼官网自动签到工具",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node ./index.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "node-cron": "^3.0.0"
+  }
+}
