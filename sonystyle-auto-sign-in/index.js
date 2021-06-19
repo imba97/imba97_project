@@ -12,11 +12,16 @@ cron.schedule('5 0 0 * * *', () => {
   doSignin();
 });
 
-// 执行签到
-function doSignin() {
+async function doSignin() {
+  await webSiteSignin();
+  bbsSignin();
+}
+
+// 主站签到
+async function webSiteSignin() {
   let timeout = 3;
   // 登录
-  axios
+  await axios
     .post(
       'https://www.sonystyle.com.cn/eSolverOmniChannel/account/login.do',
       {
@@ -35,7 +40,7 @@ function doSignin() {
     .then(async (response) => {
       if (response.data.resultMsg[0].code !== '00') {
         console.log(`[error] 登陆失败: ${response.data.resultMsg[0].message}`);
-        if (timeout-- > 0) doSignin();
+        if (timeout-- > 0) webSiteSignin();
         return;
       }
       // 拿到 access token
@@ -48,7 +53,6 @@ function doSignin() {
           null,
           {
             headers: {
-              'Content-Type': 'application/json',
               'User-Agent':
                 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36'
             }
@@ -57,17 +61,53 @@ function doSignin() {
         .then((res) => {
           console.log(`主站签到：${res.data.resultMsg[0].message}`);
         });
+    });
+}
 
-      // 社区签到
+// 社区签到
+function bbsSignin() {
+  let timeout = 3;
+
+  const data = new URLSearchParams();
+  data.append('channel', 'web');
+  data.append('user_name', username);
+  data.append('pwd', password);
+
+  axios
+    .post(
+      'https://www.sonystyle.com.cn/mysony/bbsapp/index.php?app=user&ac=api&ts=user_login&api=user',
+      data,
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `Bearer null`,
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.106 Safari/537.36'
+        }
+      }
+    )
+    .then((res) => {
+      if (res.data.code !== '0') {
+        console.log(`[error] 登陆失败: ${response.data.resultMsg[0].message}`);
+        if (timeout-- > 0) bbsSignin();
+        return;
+      }
+
+      const access_token = res.data.data.access_token;
+
+      const signinData = new URLSearchParams();
+      signinData.append('channel', 'web');
+
       axios
         .post(
           'https://www.sonystyle.com.cn/mysony/bbsapp/index.php?app=user&ac=api&api=user&ts=signin',
-          {
-            channel: 'web'
-          },
+          signinData,
           {
             headers: {
-              Authorization: `Bearer ${access_token}`
+              Authorization: `Bearer ${access_token}`,
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'User-Agent':
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.106 Safari/537.36'
             }
           }
         )

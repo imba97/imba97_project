@@ -1,6 +1,6 @@
-# 索尼中国官网自动签到
+# 索尼中国自动签到
 
-每天 `00:00:05` 这个时间点在 [索尼中国官网](https://www.sonystyle.com.cn/) 自动签到
+每天 `00:00:05` 这个时间点在 [索尼中国官网](https://www.sonystyle.com.cn/) 和 [My Sony 社区](https://www.sonystyle.com.cn/mysony/bbs/web/) 自动签到
 
 # 使用
 
