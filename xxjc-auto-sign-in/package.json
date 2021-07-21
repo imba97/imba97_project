@@ -1,0 +1,21 @@
+{
+  "name": "xxjc-auto-sign-in",
+  "version": "1.0.0",
+  "description": "xxjc.asia auto sign in",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node ./index.js"
+  },
+  "keywords": [
+    "xxjc",
+    "auto-sign-in"
+  ],
+  "author": "imba97",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "lodash": "^4.17.21",
+    "node-cron": "^3.0.0"
+  }
+}

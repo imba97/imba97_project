@@ -1,25 +1,25 @@
-import axios from 'axios';
-import cron from 'node-cron';
+import axios from 'axios'
+import cron from 'node-cron'
 
 // 用户名
-const username = '';
+const username = ''
 // 密码
-const password = '';
+const password = ''
 
 // 定时任务 （秒 分 时 天 月 星期）
 // 目前时 每天 0时 0分 5秒 执行
 cron.schedule('5 0 0 * * *', () => {
-  doSignin();
-});
+  doSignin()
+})
 
 async function doSignin() {
-  await webSiteSignin();
-  bbsSignin();
+  await webSiteSignin()
+  bbsSignin()
 }
 
 // 主站签到
 async function webSiteSignin() {
-  let timeout = 3;
+  let timeout = 3
   // 登录
   await axios
     .post(
@@ -39,12 +39,12 @@ async function webSiteSignin() {
     )
     .then(async (response) => {
       if (response.data.resultMsg[0].code !== '00') {
-        console.log(`[error] 登陆失败: ${response.data.resultMsg[0].message}`);
-        if (timeout-- > 0) webSiteSignin();
-        return;
+        console.log(`[error] 登陆失败: ${response.data.resultMsg[0].message}`)
+        if (timeout-- > 0) webSiteSignin()
+        return
       }
       // 拿到 access token
-      const access_token = response.data.resultData.access_token;
+      const access_token = response.data.resultData.access_token
 
       // 主站签到
       await axios
@@ -59,19 +59,19 @@ async function webSiteSignin() {
           }
         )
         .then((res) => {
-          console.log(`主站签到：${res.data.resultMsg[0].message}`);
-        });
-    });
+          console.log(`主站签到：${res.data.resultMsg[0].message}`)
+        })
+    })
 }
 
 // 社区签到
 function bbsSignin() {
-  let timeout = 3;
+  let timeout = 3
 
-  const data = new URLSearchParams();
-  data.append('channel', 'web');
-  data.append('user_name', username);
-  data.append('pwd', password);
+  const data = new URLSearchParams()
+  data.append('channel', 'web')
+  data.append('user_name', username)
+  data.append('pwd', password)
 
   axios
     .post(
@@ -88,15 +88,15 @@ function bbsSignin() {
     )
     .then((res) => {
       if (res.data.code !== '0') {
-        console.log(`[error] 登陆失败: ${response.data.resultMsg[0].message}`);
-        if (timeout-- > 0) bbsSignin();
-        return;
+        console.log(`[error] 登陆失败: ${response.data.resultMsg[0].message}`)
+        if (timeout-- > 0) bbsSignin()
+        return
       }
 
-      const access_token = res.data.data.access_token;
+      const access_token = res.data.data.access_token
 
-      const signinData = new URLSearchParams();
-      signinData.append('channel', 'web');
+      const signinData = new URLSearchParams()
+      signinData.append('channel', 'web')
 
       axios
         .post(
@@ -112,7 +112,7 @@ function bbsSignin() {
           }
         )
         .then((response) => {
-          console.log(`社区签到：${response.data.msg}`);
-        });
-    });
+          console.log(`社区签到：${response.data.msg}`)
+        })
+    })
 }
