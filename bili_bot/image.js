@@ -18,7 +18,7 @@ import { retry } from 'async'
 // 处理图片逻辑
 export async function imageHandle(username, url) {
   // 以图搜番
-  if (true || (await getUserIsSend(username, '以图搜番')) === 1) {
+  if ((await getUserIsSend(username, '以图搜番')) === 1) {
     /**
      * 2021年8月21日 00:42:04
      * trace.moe 没法读取 B站图床 的图片了
