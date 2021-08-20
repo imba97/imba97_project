@@ -29,6 +29,8 @@ if (cookie === '') {
   commonHeaders = getCommonHeaders()
 }
 
+console.log('启动成功')
+
 const mainTimer = setInterval(async function () {
   // 获取消息数
   axios

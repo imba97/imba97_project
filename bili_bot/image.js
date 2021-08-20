@@ -8,79 +8,102 @@ import { sendMsg } from './index.js'
 import fs, { mkdirSync } from 'fs'
 import FormData from 'form-data'
 import { tempDir, getCommonHeaders } from './config.js'
+import { getUrlFileName } from './util.js'
 import ffmpeg from 'fluent-ffmpeg'
 import crypto from 'crypto'
 import _ from 'lodash'
+import fetch from 'node-fetch'
+import { retry } from 'async'
 
 // 处理图片逻辑
 export async function imageHandle(username, url) {
   // 以图搜番
-  if ((await getUserIsSend(username, '以图搜番')) === 1) {
-    axios
-      .get(
-        `https://api.trace.moe/search?anilistInfo&url=${encodeURIComponent(
-          url
-        )}`
-      )
-      .then(async (res) => {
-        if (res.data.error !== '') {
-          sendMsg(username, `未设想的错误: ${res.data.error}`)
-        }
-        if (res.data.result.length !== 0) {
-          const removedR18 = await removeR18(res.data.result)
+  if (true || (await getUserIsSend(username, '以图搜番')) === 1) {
+    /**
+     * 2021年8月21日 00:42:04
+     * trace.moe 没法读取 B站图床 的图片了
+     * 所以改成把图下载到本地 在带图发送请求
+     */
 
-          if (removedR18.length === 0) {
-            sendMsg(username, '结果为空')
-            return
-          }
+    // 获取图片名称 xxxx.jpg
+    const imageName = getUrlFileName(url)
 
-          const animate = removedR18[0]
+    // 下载图片
+    const localPath = await saveFile(url, imageName)
 
-          const m = Math.floor(animate.to / 60)
-          const s = Math.floor(animate.to % 60)
-          const episode =
-            animate.episode !== null ? `集数：第${animate.episode}集` : ''
-          const result_msg = `名称：${
-            animate.anilist.title.native
-          }; \n${episode}; \n时间：${m}分${s}秒; \n相似度：${(
-            animate.similarity * 100
-          ).toFixed(1)}%`
+    // 获取本地图片
+    const file = fs.createReadStream(localPath)
 
-          sendMsg(username, result_msg)
-
-          // 把预览视频地址MD5当成GIF图片名称 方便下次发送
-          const fileNameMd5 = crypto
-            .createHash('md5')
-            .update(animate.video)
-            .digest('hex')
-
-          // 如果有则直接发送
-          const loadedGif = `${tempDir}/${fileNameMd5}.gif`
-          let image = await getUploadedImage(loadedGif)
-          // 没有则生成、上传到B站
-          if (image === null) {
-            const mp4Path = await saveFile(animate.video, fileNameMd5, '.mp4')
-
-            const gif = await mp4ToGif(fileNameMd5, mp4Path)
-            // 上传到B站图库 [doge]
-            image = await uploadLocalImageToBilibili(gif)
-          }
-
-          // 发送图片
-          sendMsg(
-            username,
-            JSON.stringify({
-              url: image.image_url,
-              width: image.image_width,
-              height: image.image_height
-            }),
-            2
-          )
-
-          // 重置
-          setUserIsSend(username, '以图搜番', 0)
-        }
+    // 构造参数
+    const formData = new FormData()
+    formData.append('image', file)
+    // 发起请求
+    const res = await fetch('https://api.trace.moe/search?anilistInfo', {
+      method: 'POST',
+      body: formData
+    })
+      .then((res) => res.json())
+      .catch((err) => {
+        console.error(err)
       })
+
+    if (res.error !== '') {
+      sendMsg(username, `未设想的错误: ${res.error}`)
+    }
+    if (res.result.length !== 0) {
+      const removedR18 = await removeR18(res.result)
+
+      if (removedR18.length === 0) {
+        sendMsg(username, '结果为空')
+        return
+      }
+
+      const animate = removedR18[0]
+
+      const m = Math.floor(animate.to / 60)
+      const s = Math.floor(animate.to % 60)
+      const episode =
+        animate.episode !== null ? `集数：第${animate.episode}集` : ''
+      const result_msg = `名称：${
+        animate.anilist.title.native
+      }; \n${episode}; \n时间：${m}分${s}秒; \n相似度：${(
+        animate.similarity * 100
+      ).toFixed(1)}%`
+
+      sendMsg(username, result_msg)
+
+      // 把预览视频地址MD5当成GIF图片名称 方便下次发送
+      const fileNameMd5 = crypto
+        .createHash('md5')
+        .update(animate.video)
+        .digest('hex')
+
+      // 如果有则直接发送
+      const loadedGif = `${tempDir}/${fileNameMd5}.gif`
+      let image = await getUploadedImage(loadedGif)
+      // 没有则生成、上传到B站
+      if (image === null) {
+        const mp4Path = await saveFile(animate.video, fileNameMd5, '.mp4')
+
+        const gif = await mp4ToGif(fileNameMd5, mp4Path)
+        // 上传到B站图库 [doge]
+        image = await uploadLocalImageToBilibili(gif)
+      }
+
+      // 发送图片
+      sendMsg(
+        username,
+        JSON.stringify({
+          url: image.image_url,
+          width: image.image_width,
+          height: image.image_height
+        }),
+        2
+      )
+
+      // 重置
+      setUserIsSend(username, '以图搜番', 0)
+    }
   }
 }
 
