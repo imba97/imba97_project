@@ -4,6 +4,7 @@ import cron from 'node-cron'
 
 const email = ''
 const password = ''
+const baseUrl = 'https://xxjc.vip'
 
 // 定时任务 （秒 分 时 天 月 星期）
 // 目前时 每天 0时 0分 5秒 执行
@@ -18,7 +19,7 @@ async function doSignin() {
   data.append('code', '')
 
   axios
-    .post('https://xxjc.asia/auth/login', data, {
+    .post(`${baseUrl}/auth/login`, data, {
       headers: {
         'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
         'user-agent':
@@ -36,7 +37,7 @@ async function doSignin() {
 
       axios
         .post(
-          'https://xxjc.asia/user/checkin',
+          `${baseUrl}/user/checkin`,
           {},
           {
             headers: {
