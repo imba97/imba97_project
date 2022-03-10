@@ -26,9 +26,13 @@ module.exports = {
   getLog(key, path, user) {
     let result = ''
 
-    execSync('git pull', {
-      cwd: path
-    })
+    try {
+      execSync('git pull', {
+        cwd: path
+      })
+    } catch (e) {
+      console.log(e)
+    }
 
     const res = execSync(
       `git log --after="${moment()
