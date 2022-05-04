@@ -12,3 +12,4 @@
 - [索尼中国官网自动签到](https://github.com/imba97/imba97_project/tree/master/sonystyle-auto-sign-in)
 - [小小机场官网自动签到](https://github.com/imba97/imba97_project/tree/master/xxjc-auto-sign-in)
 - [钉钉日报机器人](https://github.com/imba97/imba97_project/tree/master/dingtalk-report-robot)
+- [十年之约论坛自动签到](https://github.com/imba97/imba97_project/tree/master/xyears-auto-sign-in)
