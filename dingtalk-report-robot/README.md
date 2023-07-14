@@ -52,6 +52,40 @@ pm2 start 项目目录/src/ding-robot.js --name 名称
 pm2 save
 ```
 
+# 手动执行
+
+程序可以使用 node 直接执行
+
+## 获取日报
+
+会根据配置文件的天数获取日报
+
+```shell
+node ./src/index.js
+```
+
+## 指定天数
+
+获取今天的日报
+
+```shell
+node ./src/index.js 0
+```
+
+获取 7 天内的日报
+
+```shell
+node ./src/index.js 7
+```
+
+## 指定日期
+
+获取指定日期的日报
+
+```shell
+node ./src/index.js 2023-07-14
+```
+
 # 博客文章
 
 [《钉钉日报机器人》](https://imba97.cn/archives/751/)
