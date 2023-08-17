@@ -22,7 +22,8 @@ module.exports = {
 
     try {
       execSync('git pull', {
-        cwd: path
+        cwd: path,
+        windowsHide: true
       })
     } catch (e) {
       console.log(e)
@@ -37,7 +38,8 @@ module.exports = {
     }
 
     const res = execSync(command, {
-      cwd: path
+      cwd: path,
+      windowsHide: true
     })
 
     const line = res
